@@ -1,21 +1,21 @@
 package org.keedio.examples.oxford;
 
-import org.apache.commons.io.IOUtils;
 import org.keedio.examples.IService;
+import org.keedio.examples.rest.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Profile("facedetection")
@@ -46,31 +46,22 @@ public class FaceDetection extends OxfordService implements IService {
         super();
     }
 
-    public String request(String file) throws IOException {
+    public Object request(String file) throws IOException {
 
         List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.APPLICATION_JSON);
-
         HttpHeaders headers = getHeaders(subscriptionKey);
-        headers.set(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
         headers.setAccept(mediaTypes);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(endpoint)
-                .queryParam("analyzesFaceLandmarks", analyzesFaceLandmarks)
-                .queryParam("analyzesAge", analyzesAge)
-                .queryParam("analyzesGender", analyzesGender)
-                .queryParam("analyzesHeadPose", analyzesHeadPose);
-        URI query = builder.build().encode().toUri();
-        log.info("URI is: " + query.toString());
-
-        HttpEntity<byte[]> entity = new HttpEntity<>(IOUtils.toByteArray(new FileInputStream(file)), headers);
+        Map<String, Boolean> params = new HashMap<>();
+        params.put("analyzesFaceLandmarks", analyzesFaceLandmarks);
+        params.put("analyzesAge", analyzesAge);
+        params.put("analyzesGender", analyzesGender);
+        params.put("analyzesHeadPose", analyzesHeadPose);
 
         ArrayList<Object> dummy = new ArrayList<>();
+        ResponseEntity<?> detection = (new Request(endpoint, params)).exchange(file, headers, dummy.getClass());
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<ArrayList<Object>> detection =
-                restTemplate.exchange(query, HttpMethod.POST, entity, (Class<ArrayList<Object>>) dummy.getClass());
-
-        return detection.getBody().toString();
+        return detection.getBody();
     }
 }
