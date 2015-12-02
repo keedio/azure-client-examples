@@ -1,0 +1,65 @@
+package org.keedio.examples.oxford;
+
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.keedio.examples.IService;
+import org.keedio.examples.rest.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Thumbnail extends OxfordService implements IService {
+
+    private static final Logger log = LoggerFactory.getLogger(FaceDetection.class);
+
+    @Value("${endpoint}")
+    private String endpoint;
+
+    @Value("${subscriptionKey}")
+    private String subscriptionKey;
+
+    @Value("${width}")
+    private Integer width;
+
+    @Value("${height")
+    private Integer height;
+
+    @Value("${smartCropping}")
+    private Boolean smartCropping;
+
+    public Thumbnail() {
+        super();
+    }
+
+    public Object request(String file) throws IOException {
+
+        HttpHeaders headers = getHeaders(subscriptionKey);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("width", width);
+        params.put("width", height);
+        params.put("width", smartCropping);
+
+        byte[] dummy = "".getBytes();
+        ResponseEntity<?> response = (new Request(endpoint, params)).exchange(file, headers, dummy.getClass());
+
+        try {
+            FileOutputStream output = new FileOutputStream(new File("thumbnail.jpg"));
+            Base64.decode(response.getBody().toString().getBytes(), output);
+            output.close();
+        } catch (Base64DecodingException e) {
+            e.printStackTrace();
+        }
+
+        return "Thumbnail saved to thumbnail.jpg";
+    }
+
+}
