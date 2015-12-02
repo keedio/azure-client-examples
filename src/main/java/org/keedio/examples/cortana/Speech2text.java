@@ -20,8 +20,8 @@ public class Speech2text extends CortanaService implements IService {
 
     private static final Logger log = LoggerFactory.getLogger(Speech2text.class);
 
-    private static final String ENDPOINT = "https://speech.platform.bing.com/recognize/query";
-
+    @Value("${endpoint}")
+    private String endpoint;
     @Value("${scope}")
     private String scope;
     @Value("${appID}")
@@ -72,7 +72,7 @@ public class Speech2text extends CortanaService implements IService {
 
         HashMap<String, String> dummy = new HashMap<>();
 
-        ResponseEntity<?> conversion = (new Request(ENDPOINT, params)).exchange(file, headers, dummy.getClass());
+        ResponseEntity<?> conversion = (new Request(endpoint, params)).exchange(file, headers, dummy.getClass());
 
         return conversion.getBody();
     }

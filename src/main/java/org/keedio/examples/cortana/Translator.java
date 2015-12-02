@@ -17,8 +17,9 @@ import java.util.Map;
 public class Translator extends CortanaService implements IService {
 
     private static final Logger log = LoggerFactory.getLogger(Translator.class);
-    private static final String ENDPOINT = "http://api.microsofttranslator.com/V2/Http.svc/Translate";
 
+    @Value("${endpoint}")
+    private String endpoint;
     @Value("${scope}")
     private String scope;
     @Value("${appID}")
@@ -41,6 +42,6 @@ public class Translator extends CortanaService implements IService {
         params.put("to", "en");
         params.put("contentType", "text/plain");
 
-        return (new Request(ENDPOINT, params)).get(String.class);
+        return (new Request(endpoint, params)).get(String.class);
     }
 }
