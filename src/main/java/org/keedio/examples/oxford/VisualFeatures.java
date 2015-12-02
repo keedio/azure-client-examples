@@ -30,7 +30,7 @@ public class VisualFeatures extends OxfordService implements IService {
     private String subscriptionKey;
 
     @Value("${visualFeatures}")
-    private Boolean visualFeatures;
+    private String visualFeatures;
 
 
     public VisualFeatures() {
@@ -44,10 +44,10 @@ public class VisualFeatures extends OxfordService implements IService {
         HttpHeaders headers = getHeaders(subscriptionKey);
         headers.setAccept(mediaTypes);
 
-        Map<String, Boolean> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("visualFeatures", visualFeatures);
 
-        ArrayList<Object> dummy = new ArrayList<>();
+        HashMap<String,Object> dummy = new HashMap<>();
         ResponseEntity<?> detection = (new Request(endpoint, params)).exchange(file, headers, dummy.getClass());
 
         return detection.getBody();
