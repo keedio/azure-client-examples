@@ -1,22 +1,18 @@
 package org.keedio.examples.cortana;
 
-import org.apache.commons.io.IOUtils;
 import org.keedio.examples.IService;
+import org.keedio.examples.rest.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @Profile("speech2text")
@@ -24,10 +20,16 @@ public class Speech2text extends CortanaService implements IService {
 
     private static final Logger log = LoggerFactory.getLogger(Speech2text.class);
 
-    @Value("${scope}")     private String scope;
-    @Value("${appID}")     private String appID;
-    @Value("${appSecret}") private String appSecret;
-    @Value("${deviceID}")  private String deviceID;
+    private static final String ENDPOINT = "https://speech.platform.bing.com/recognize/query";
+
+    @Value("${scope}")
+    private String scope;
+    @Value("${appID}")
+    private String appID;
+    @Value("${appSecret}")
+    private String appSecret;
+    @Value("${deviceID}")
+    private String deviceID;
 
     Speech2text() {
         super();
@@ -46,41 +48,31 @@ public class Speech2text extends CortanaService implements IService {
      * @return a {@see Conversion} object encapsulating the info returned by the Microsoft API.
      * @throws IOException
      */
-    public HashMap<String, String> request(String file) throws IOException {
+    public Object request(String file) throws IOException {
         String authToken = "Bearer " + getToken(appID, appSecret, scope);
 
-        HttpHeaders headers = new HttpHeaders();
         List<MediaType> mediaTypes = new ArrayList<>();
-        mediaTypes.add(MediaType.TEXT_XML);
         mediaTypes.add(MediaType.APPLICATION_JSON);
 
-        headers.setAccept(mediaTypes);
-
+        HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, authToken);
-        headers.add(HttpHeaders.HOST, "speech.platform.bing.com");
+        headers.setAccept(mediaTypes);
         headers.set(HttpHeaders.CONTENT_TYPE, "audio/wav;codec=\"audio/pcm\";samplerate=8000;trustsourcerate=false");
 
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<byte[]> entity = new HttpEntity<>(IOUtils.toByteArray(new FileInputStream(file)), headers);
-
-        String requestId = UUID.randomUUID().toString();
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("https://speech.platform.bing.com/recognize/query")
-                .queryParam("format", "json")
-                .queryParam("appid", appID)
-                .queryParam("locale", "en-US")
-                .queryParam("device.os", "Linux")
-                .queryParam("version", "3.0")
-                .queryParam("maxnbest", "3")
-                .queryParam("scenarios", "smd")
-                .queryParam("instanceid", deviceID)
-                .queryParam("requestid", requestId);
+        Map<String, String> params = new HashMap<>();
+        params.put("format", "json");
+        params.put("appid", appID);
+        params.put("locale", "en-US");
+        params.put("device.os", "Linux");
+        params.put("version", "3.0");
+        params.put("maxnbest", "3");
+        params.put("scenarios", "smd");
+        params.put("instanceid", deviceID);
+        params.put("requestid", UUID.randomUUID().toString());
 
         HashMap<String, String> dummy = new HashMap<>();
 
-        ResponseEntity<HashMap<String, String>> conversion =
-                restTemplate.exchange(builder.build().encode().toUri(),
-                        HttpMethod.POST, entity, (Class<HashMap<String, String>>) dummy.getClass());
+        ResponseEntity<?> conversion = (new Request(ENDPOINT, params)).exchange(file, headers, dummy.getClass());
 
         return conversion.getBody();
     }
