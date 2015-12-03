@@ -2,11 +2,8 @@ package org.keedio.examples.oxford;
 
 import org.keedio.examples.IService;
 import org.keedio.examples.rest.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +16,6 @@ import java.util.Map;
 @Component
 @Profile("thumbnails")
 public class Thumbnail extends OxfordService implements IService {
-
-    private static final Logger log = LoggerFactory.getLogger(FaceDetection.class);
 
     @Value("${endpoint}")
     private String endpoint;
@@ -43,8 +38,6 @@ public class Thumbnail extends OxfordService implements IService {
 
     public Object request(String file) throws IOException {
 
-        HttpHeaders headers = getHeaders(subscriptionKey);
-
         Map<String, Object> params = new HashMap<>();
         params.put("width", width);
         params.put("height", height);
@@ -52,7 +45,8 @@ public class Thumbnail extends OxfordService implements IService {
 
         // FIXME: that's awful and doesn't work anyway...
         byte[] dummy = "".getBytes();
-        ResponseEntity<?> response = (new Request(endpoint, params)).exchange(file, headers, dummy.getClass());
+        Request request = new Request(endpoint, params);
+        ResponseEntity<?> thumbnail = request.exchange(file, getHeaders(true), dummy.getClass());
 
         try {
             FileOutputStream output = new FileOutputStream(new File("thumbnail.jpg"));

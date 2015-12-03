@@ -33,8 +33,4 @@ abstract class OxfordService {
         return headers;
     }
 
-    // TODO: remove!
-    protected HttpHeaders getHeaders(String dummy) {
-        return new HttpHeaders();
-    }
 }
