@@ -1,7 +1,5 @@
 package org.keedio.examples.oxford;
 
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 import org.keedio.examples.IService;
 import org.keedio.examples.rest.Request;
 import org.slf4j.Logger;
@@ -58,9 +56,9 @@ public class Thumbnail extends OxfordService implements IService {
 
         try {
             FileOutputStream output = new FileOutputStream(new File("thumbnail.jpg"));
-            Base64.decode(response.getBody().toString().getBytes(), output);
+            // Base64.decode(response.getBody().toString().getBytes(), output);
             output.close();
-        } catch (Base64DecodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
