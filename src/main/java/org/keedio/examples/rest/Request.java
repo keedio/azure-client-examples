@@ -36,14 +36,24 @@ public class Request {
         log.info("URI is: " + query.toString());
     }
 
-
-    public ResponseEntity<?> exchange(String file, HttpHeaders headers, Class<?> clazz)
+    // TODO: find a better way to wrap these
+    public ResponseEntity<?> postFile(String file, HttpHeaders headers, Class<?> clazz)
             throws IOException {
 
         if (!headers.containsKey(HttpHeaders.CONTENT_TYPE)) {
             headers.set(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
         }
         HttpEntity<byte[]> entity = new HttpEntity<>(IOUtils.toByteArray(new FileInputStream(file)), headers);
+
+        return restTemplate.exchange(query, HttpMethod.POST, entity, clazz);
+    }
+
+    public ResponseEntity<?> postText(String body, HttpHeaders headers, Class<?> clazz) {
+
+        if (!headers.containsKey(HttpHeaders.CONTENT_TYPE)) {
+            headers.set(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
+        }
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         return restTemplate.exchange(query, HttpMethod.POST, entity, clazz);
     }

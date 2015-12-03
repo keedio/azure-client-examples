@@ -46,7 +46,7 @@ public class Thumbnail extends OxfordService implements IService {
         // FIXME: that's awful and doesn't work anyway...
         byte[] dummy = "".getBytes();
         Request request = new Request(endpoint, params);
-        ResponseEntity<?> thumbnail = request.exchange(file, getHeaders(true), dummy.getClass());
+        ResponseEntity<?> thumbnail = request.postFile(file, getHeaders(true), dummy.getClass());
 
         try {
             FileOutputStream output = new FileOutputStream(new File("thumbnail.jpg"));

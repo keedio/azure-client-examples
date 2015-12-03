@@ -32,7 +32,7 @@ public class EmotionScores extends OxfordService implements IService {
 
         ArrayList<Object> dummy = new ArrayList<>();
         Request request = new Request(endpoint, params);
-        ResponseEntity<?> emotion = request.exchange(file, getHeaders(false), dummy.getClass());
+        ResponseEntity<?> emotion = request.postFile(file, getHeaders(false), dummy.getClass());
 
         return emotion.getBody();
     }

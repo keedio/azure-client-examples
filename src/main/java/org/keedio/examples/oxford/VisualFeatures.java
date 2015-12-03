@@ -29,7 +29,7 @@ public class VisualFeatures extends OxfordService implements IService {
 
         HashMap<String, Object> dummy = new HashMap<>();
         Request request = new Request(endpoint, params);
-        ResponseEntity<?> features = request.exchange(file, getHeaders(false), dummy.getClass());
+        ResponseEntity<?> features = request.postFile(file, getHeaders(false), dummy.getClass());
 
         return features.getBody();
     }

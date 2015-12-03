@@ -43,7 +43,7 @@ public class FaceDetection extends OxfordService implements IService {
 
         ArrayList<Object> dummy = new ArrayList<>();
         Request request = new Request(endpoint, params);
-        ResponseEntity<?> detection = request.exchange(file, getHeaders(false), dummy.getClass());
+        ResponseEntity<?> detection = request.postFile(file, getHeaders(false), dummy.getClass());
 
         return detection.getBody();
     }

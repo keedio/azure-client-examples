@@ -72,7 +72,7 @@ public class Speech2text extends CortanaService implements IService {
 
         HashMap<String, String> dummy = new HashMap<>();
 
-        ResponseEntity<?> conversion = (new Request(endpoint, params)).exchange(file, headers, dummy.getClass());
+        ResponseEntity<?> conversion = (new Request(endpoint, params)).postFile(file, headers, dummy.getClass());
 
         return conversion.getBody();
     }

@@ -35,7 +35,7 @@ public class CharRecognition extends OxfordService implements IService {
 
         HashMap<String, String> dummy = new HashMap<>();
         Request request = new Request(endpoint, params);
-        ResponseEntity<?> text = request.exchange(file, getHeaders(false), dummy.getClass());
+        ResponseEntity<?> text = request.postFile(file, getHeaders(false), dummy.getClass());
 
         return text.getBody();
     }
