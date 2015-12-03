@@ -3,12 +3,16 @@ package org.keedio.examples.oxford;
 import org.keedio.examples.IService;
 import org.keedio.examples.rest.Request;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
+@Profile("ocr")
 public class CharRecognition extends OxfordService implements IService {
 
     @Value("${language}")
