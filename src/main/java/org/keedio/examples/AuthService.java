@@ -1,5 +1,6 @@
-package org.keedio.examples.domain;
+package org.keedio.examples;
 
+import org.keedio.examples.domain.AdmAccessToken;
 import org.keedio.examples.rest.Request;
 import org.springframework.http.ResponseEntity;
 

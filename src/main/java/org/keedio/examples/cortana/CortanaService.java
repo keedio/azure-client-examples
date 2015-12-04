@@ -1,7 +1,7 @@
 package org.keedio.examples.cortana;
 
 import org.apache.commons.codec.binary.Base64;
-import org.keedio.examples.domain.AuthService;
+import org.keedio.examples.AuthService;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.UnsupportedEncodingException;
