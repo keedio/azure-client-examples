@@ -2,8 +2,6 @@ package org.keedio.examples.cortana;
 
 import org.keedio.examples.IService;
 import org.keedio.examples.rest.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
@@ -18,16 +16,6 @@ import java.util.*;
 @Profile("speech2text")
 public class Speech2text extends CortanaService implements IService {
 
-    private static final Logger log = LoggerFactory.getLogger(Speech2text.class);
-
-    @Value("${endpoint}")
-    private String endpoint;
-    @Value("${scope}")
-    private String scope;
-    @Value("${appID}")
-    private String appID;
-    @Value("${appSecret}")
-    private String appSecret;
     @Value("${deviceID}")
     private String deviceID;
 
@@ -49,7 +37,7 @@ public class Speech2text extends CortanaService implements IService {
      * @throws IOException
      */
     public Object request(String file) throws IOException {
-        String authToken = "Bearer " + getToken(appID, appSecret, scope);
+        String authToken = "Bearer " + getToken();
 
         List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.APPLICATION_JSON);
