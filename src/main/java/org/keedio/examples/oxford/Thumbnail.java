@@ -14,8 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Profile("thumbnails")
+@Profile("thumbnail")
 public class Thumbnail extends OxfordService implements IService {
+
+    private static final String THUMBNAIL_FILENAME = "thumbnail.jpg";
 
     @Value("${endpoint}")
     private String endpoint;
@@ -43,20 +45,20 @@ public class Thumbnail extends OxfordService implements IService {
         params.put("height", height);
         params.put("smartCropping", smartCropping);
 
-        // FIXME: that's awful and doesn't work anyway...
         byte[] dummy = "".getBytes();
         Request request = new Request(endpoint, params);
         ResponseEntity<?> thumbnail = request.postFile(file, getHeaders(true), dummy.getClass());
 
         try {
-            FileOutputStream output = new FileOutputStream(new File("thumbnail.jpg"));
-            // Base64.decode(response.getBody().toString().getBytes(), output);
+            byte[] payload = (byte[]) thumbnail.getBody();
+            FileOutputStream output = new FileOutputStream(new File(THUMBNAIL_FILENAME));
+            output.write(payload);
             output.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "Thumbnail saved to thumbnail.jpg";
+        return THUMBNAIL_FILENAME;
     }
 
 }

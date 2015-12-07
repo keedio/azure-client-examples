@@ -28,6 +28,6 @@ Available profiles:
 - facedetection: analyze an image. ARG: full path of the image file. Accepts JPEG, PNG, GIF, BMP, max = 4MB.
 - emotion: score emotions. ARG: full path of the image file. Accepts JPEG, PNG, GIF, BMP, max = 4MB.
 - visualfeatures: extract features from image. ARG: full path of the image file. Accepts JPEG, PNG, GIF, BMP, max = 4MB.
-- thumbnails: work in progress...
+- thumbnail: return a thumbnail of the input image. ARG: full path of the image file. Accepts JPEG, PNG, GIF, BMP, max = 4MB.
 - ocr: detect text from an image. ARG: full path of the image file.
 - spellcheck: ARG: the text to be checked (enclosed with double quotes).
