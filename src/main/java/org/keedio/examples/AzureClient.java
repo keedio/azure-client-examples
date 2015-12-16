@@ -27,7 +27,7 @@ class AzureClient implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Object response = service.request(args[0]);
         if (response != null)
-            log.info(response.toString());
+            log.info("Response is: \n" + response.toString());
     }
 
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Data Structure mapping the json returned from Microsoft's Speech-to-text authentication API.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class AdmAccessToken{
+public class AdmAccessToken{
     private String access_token;
     private String token_type;
     private String expires_in;

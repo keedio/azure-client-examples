@@ -25,3 +25,9 @@ Available profiles:
 
 - speech2text: convert a wav file to text. ARG: full path to the wav file to convert.
 - translator: translate a text to english. ARG: the text to be translated (enclosed with double quotes).
+- facedetection: analyze an image. ARG: full path of the image file. Accepts JPEG, PNG, GIF, BMP, max = 4MB.
+- emotion: score emotions. ARG: full path of the image file. Accepts JPEG, PNG, GIF, BMP, max = 4MB.
+- visualfeatures: extract features from image. ARG: full path of the image file. Accepts JPEG, PNG, GIF, BMP, max = 4MB.
+- thumbnail: return a thumbnail of the input image. ARG: full path of the image file. Accepts JPEG, PNG, GIF, BMP, max = 4MB.
+- ocr: detect text from an image. ARG: full path of the image file.
+- spellcheck: ARG: the text to be checked (enclosed with double quotes).

@@ -1,9 +1,11 @@
-package org.keedio.examples.domain;
+package org.keedio.examples;
 
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
+import org.keedio.examples.domain.AdmAccessToken;
+import org.keedio.examples.rest.Request;
+import org.springframework.http.ResponseEntity;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 
 public class AuthService {
@@ -15,21 +17,15 @@ public class AuthService {
      *
      * @throws UnsupportedEncodingException
      */
-    public static String token(String appID, String appSecret, String scope) throws UnsupportedEncodingException {
-        RestTemplate restTemplate = new RestTemplate();
-
+    public static String token(String appID, String appSecret, String scope) throws URISyntaxException, UnsupportedEncodingException {
         String body =
                 String.format("grant_type=client_credentials&client_id=%s&client_secret=%s&scope=%s",
                         URLEncoder.encode(appID, "UTF-8"),
                         URLEncoder.encode(appSecret, "UTF-8"),
                         URLEncoder.encode(scope, "UTF-8"));
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<String> entity = new HttpEntity<>(body, headers);
-
-        ResponseEntity<AdmAccessToken> result =
-                restTemplate.exchange(DATAMARKET_ACCESS_URI, HttpMethod.POST, entity, AdmAccessToken.class);
+        Request request = new Request(DATAMARKET_ACCESS_URI);
+        ResponseEntity<AdmAccessToken> result = (ResponseEntity<AdmAccessToken>) request.postText(body, AdmAccessToken.class);
 
         return result.getBody().getAccess_token();
     }
